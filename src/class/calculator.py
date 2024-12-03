@@ -6,7 +6,7 @@ class Calculator:
     """
 
     @staticmethod
-    def calculate_average_metrics(metrics):
+    def calculate_average_metrics(metrics: dict) -> dict:
         """
         Calculates the average of metrics for each team.
 
@@ -17,20 +17,70 @@ class Calculator:
             dict: A dictionary with the average centroid, amplitude, and depth for each team.
         """
         averages = {}
+
+        # Calcula a média de cada métrica para cada equipe
         for team, data in metrics.items():
-            centroid_avg = np.mean([centroid[0] for centroid in data['centroid']], axis=0)
-            amplitude_avg = np.mean(data['amplitude'])
-            depth_avg = np.mean(data['depth'])
+            centroid_avg = np.mean([centroid[0] / 100 for centroid in data['Centroide']], axis=0)
+            amplitude_avg = np.mean(data['Amplitude']) / 100
+            depth_avg = np.mean(data['Profundidade']) / 100
             
             averages[team] = {
-                'centroid': centroid_avg,
-                'amplitude': amplitude_avg,
-                'depth': depth_avg
+                'Centroide': centroid_avg,
+                'Amplitude': amplitude_avg,
+                'Profundidade': depth_avg,
+                'posse': 0
             }
+
+        # Calcula a média de posse de bola para cada equipe
+        averages[1]['posse'] = metrics[1]['posse'] / (metrics[1]['posse'] + metrics[2]['posse']) * 100
+        averages[2]['posse'] = metrics[2]['posse'] / (metrics[1]['posse'] + metrics[2]['posse']) * 100
+
         return averages
+    
+    @staticmethod
+    def calculate_average_speeds(players_velocities: dict, team_players: dict) -> dict:
+        """
+        Calculates the average speed for each player and the average per team.
+
+        Args:
+            players_velocities (dict): Dictionary in the format {id: [speeds]}.
+            team_players (dict): Dictionary in the format {team: set(ids)}, where `team` is the team number (1 or 2)
+                                 and `ids` is a set of player IDs for that team.
+
+        Returns:
+            dict: A dictionary with individual and team averages in the format:
+                  {
+                      "individual_avg": {id: (team, value), ...},
+                      "team_avg": {team: value, ...}
+                  }
+        """
+        individual_averages = {}
+        team_averages = {1: [], 2: []}  
+
+        # Calcula a média de velocidade para cada jogador
+        for player_id, speeds in players_velocities.items():
+            individual_avg = sum(speeds) / len(speeds) if speeds else 0
+            individual_averages[player_id] = None  
+
+            # Checa a qual equipe o jogador pertence e adiciona a média à lista de médias da equipe
+            for team, players in team_players.items():
+                if player_id in players:
+                    individual_averages[player_id] = (team, individual_avg)
+                    team_averages[team].append(individual_avg)
+                    break  
+
+        # Calcula a média de velocidade para cada equipe
+        team_averages = {team: (sum(speeds) / len(speeds) if speeds else 0)
+                         for team, speeds in team_averages.items()}
+
+        return {
+            "media_individual": individual_averages,
+            "media_equipe": team_averages
+        }
+
 
     @staticmethod
-    def calculate_centroid(positions):
+    def calculate_centroid(positions: list) -> np.ndarray:
         """
         Calculates the centroid of a given set of positions.
 
@@ -49,7 +99,7 @@ class Calculator:
         return None
 
     @staticmethod
-    def nearest_player_to_ball(ball_position, player_positions, all_detections):
+    def nearest_player_to_ball(ball_position: np.ndarray, player_positions: np.ndarray, all_detections) -> tuple:
         """
         Finds the nearest player to the ball.
 
@@ -82,46 +132,45 @@ class Calculator:
         return nearest_player_id, min_distance
 
     @staticmethod
-    def calculate_velocity(current_positions, previous_positions, all_detections, previus_all_detections):
+    def calculate_velocity(current_positions: np.ndarray, previous_positions: np.ndarray, all_detections, previous_all_detections) -> dict:
         """
-        Calcula a velocidade de cada jogador.
+        Calculates the velocity of each player.
 
         Args:
-            current_positions (numpy.ndarray): Posições atuais dos jogadores [[x1, y1], ...].
-            previous_positions (numpy.ndarray): Posições anteriores dos jogadores [[x1, y1], ...].
-            all_detections: Objeto contendo IDs dos jogadores e suas posições.
+            current_positions (numpy.ndarray): Current player positions [[x1, y1], ...].
+            previous_positions (numpy.ndarray): Previous player positions [[x1, y1], ...].
+            all_detections: Object containing player IDs and their positions.
 
         Returns:
-            list: Uma lista de velocidades para cada jogador.
+            dict: A dictionary of velocities for each player.
         """
-        velocities = []
-        for i in range(1, 11):  # IDs de 1 a 10
-            # Filtrar as posições atuais e anteriores para o jogador com ID `i`
+        velocities = {}
+        for i in range(1, 11):  # IDs from 1 to 10
+            # Filter current and previous positions for player ID `i`
             current_idx = np.where(all_detections.tracker_id == i)[0]
-            previous_idx = np.where(previus_all_detections.tracker_id == i)[0]
+            previous_idx = np.where(previous_all_detections.tracker_id == i)[0]
             
             if len(current_idx) == 0 or len(previous_idx) == 0:
-                continue  # Pula se o jogador não foi detectado no frame atual ou anterior
+                continue  # Skip if the player was not detected in the current or previous frame
 
-            # Garantir que os índices não ultrapassam os limites
+            # Ensure that the indices do not exceed the bounds
             if current_idx[0] >= len(current_positions) or previous_idx[0] >= len(previous_positions):
                 continue
 
             current = current_positions[current_idx[0]]
             previous = previous_positions[previous_idx[0]]
 
-            # Calcular a distância e a velocidade
+            # Calculate the distance and velocity
             distance = np.sqrt(
                 (current[0] / 100 - previous[0] / 100) ** 2 +
                 (current[1] / 100 - previous[1] / 100) ** 2
             )
-            velocities.append((i, distance * 3.6 / 0.34)) 
+            velocities[i] = distance * 3.6  # Velocity in km/h
 
         return velocities
 
-
     @staticmethod
-    def calculate_amplitude_and_depth(player_positions):
+    def calculate_amplitude_and_depth(player_positions: np.ndarray) -> np.ndarray:
         """
         Calculates the amplitude and depth based on player positions.
 
