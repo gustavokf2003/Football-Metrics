@@ -1,0 +1,65 @@
+Metricas Finais do Jogo
+==============================
+
+Time 1
+Centroide: [[     14.687      30.726]]
+Amplitude: [18.312864990234374]
+Profundidade: [22.63338623046875]
+Posse: [100.0]
+
+Passes total do time: 6
+
+Passes por jogador:
+Jogador 1: 2
+Jogador 2: 0
+Jogador 3: 0
+Jogador 4: 1
+Jogador 8: 3
+
+Velocidade media da equipe: 1.69 km/h
+
+Velocidade media por jogador:
+Jogador 1: 2.61 km/h
+Jogador 2: 0.53 km/h
+Jogador 3: 1.50 km/h
+Jogador 4: 1.98 km/h
+Jogador 8: 1.83 km/h
+
+Entropia de Shannon por jogador:
+Jogador 1: 4.68
+Jogador 2: 0.82
+Jogador 3: 4.02
+Jogador 4: 4.23
+Jogador 8: 3.90
+==============================
+
+Time 2
+Centroide: [[     14.687      30.726]]
+Amplitude: [14.063489990234375]
+Profundidade: [20.53588623046875]
+Posse: [0.0]
+
+Passes total do time: 0
+
+Passes por jogador:
+Jogador 5: 0
+Jogador 6: 0
+Jogador 7: 0
+Jogador 9: 0
+Jogador 10: 0
+
+Velocidade media da equipe: 1.51 km/h
+
+Velocidade media por jogador:
+Jogador 5: 0.82 km/h
+Jogador 6: 1.90 km/h
+Jogador 7: 1.42 km/h
+Jogador 9: 1.89 km/h
+Jogador 10: 1.54 km/h
+
+Entropia de Shannon por jogador:
+Jogador 5: 2.88
+Jogador 6: 4.53
+Jogador 7: 3.50
+Jogador 9: 4.14
+Jogador 10: 3.88

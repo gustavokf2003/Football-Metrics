@@ -6,9 +6,11 @@ Este projeto foi desenvolvido para processar jogos de futebol, analisando métri
 - Detecção de jogadores e bola
 - Detecção de pontos no campo
 - Rastreamento dos jogadores
-- Calculo do centróide, da profundidade e da amplitude da equipe
+- Cálculo do centróide, da profundidade e da amplitude da equipe
 - Calcula da posse de bola da equipe
-- Calculo da velocidade de cada jogador com base nas mudanças de posição.
+- Cálculo da velocidade de cada jogador com base nas mudanças de posição.
+- Cálculo da entropia de cada jogador
+- Contagem de passes de cada jogador
 - Visualização da posição dos jogadores e da bola em um mapa 2D.
 
 ## **Instalação**
@@ -17,6 +19,11 @@ pip install -r requirements.txt
 ```
 
 ### Uso
+
+Modifique as variáveis source_video_path e target_video_path do arquivo main.py com a localização do video que você deseja processar e localização do video de saída, respectivamente.
+
+Depois basta rodar esse script.
+
 ```bash
-python src/class/footballgameprocessor.py
+python src/main.py
 ```
