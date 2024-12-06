@@ -13,6 +13,14 @@ Este projeto foi desenvolvido para processar jogos de futebol, analisando métri
 - Contagem de passes de cada jogador
 - Visualização da posição dos jogadores e da bola em um mapa 2D.
 
+## Modelo de detecção de jogadores e bola
+
+https://app.roboflow.com/ml-dejsl/football-players-detection-mwgyr/11
+
+## Modelo de deteccção de pontos no campo
+
+https://app.roboflow.com/ml-dejsl/keypoint-football-field-detect/5
+
 ## **Instalação**
 ```bash
 pip install -r requirements.txt
